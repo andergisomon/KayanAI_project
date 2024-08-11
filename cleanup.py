@@ -1,3 +1,23 @@
+import sys
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python cleanup.py <input_file.txt> <output_file.txt>")
+        print("Everything EXCEPT the following characters will be removed: ")
+        print(get_chars())
+        sys.exit(1)
+    else:
+        print("Everything EXCEPT the following characters will be removed: ")
+        print(get_chars())
+        input_filename = sys.argv[1]
+        output_filename = sys.argv[2]
+
+        allowed_characters = get_chars()
+
+        print("Filtering ", input_filename)
+        filter_characters(input_filename, output_filename, allowed_characters)
+        print("Done. Stored as ", output_filename)
+
 def get_chars():
     chars = []
 
@@ -12,6 +32,7 @@ def get_chars():
     chars.append(chr(0x0029)) # Right parenthesis
     chars.append(chr(0x003A)) # Colon
     chars.append(chr(0x003F)) # Question mark
+    chars.append(chr(0x002D)) # Hyphen-Minus
 
     # Confusables - These characters look similar to the Kayan glottal stop character, typically typed with U+0027
     chars.append(chr(0x0060)) # Grave accent (in case an apostrophe was mistaken as a grave accent)
@@ -50,6 +71,17 @@ def get_chars():
     chars.append(chr(0x16F52)) # Miao Sign Reformed Voicing
     chars.append(chr(0xFF07)) # Fullwidth Apostrophe
     chars.append(chr(0xFF40)) # Fullwidth Grave Accents
+
+    # Hyphen confusables
+    chars.append(chr(0x02D7)) # Modifier Letter Minus Sign
+    chars.append(chr(0x2010)) # Hyphen
+    chars.append(chr(0x2011)) # Non-breaking Hyphen
+    chars.append(chr(0x2012)) # Figure dash
+    chars.append(chr(0x2013)) # En Dash
+    chars.append(chr(0x2043)) # Hyphen Bullet
+    chars.append(chr(0x2212)) # Minus Sign
+    chars.append(chr(0x2CBA)) # Coptic Capital Letter Dialect-P NI
+    chars.append(chr(0xFE58)) # Small Em Dash
     
 
     # Append digits
@@ -96,8 +128,6 @@ def get_chars():
 
     return chars
 
-print("Everything EXCEPT the following characters will be removed: ")
-print(get_chars())
 
 def filter_characters(input_file, output_file, allowed_chars):
   """Removes all characters except those in allowed_chars from input_file and writes to output_file.
@@ -113,11 +143,6 @@ def filter_characters(input_file, output_file, allowed_chars):
       filtered_line = ''.join(char for char in line if char in allowed_chars)
       f_out.write(filtered_line)
 
-allowed_characters = get_chars()
-input_filename = 'output_part1.txt'
-output_filename = 'part1_cleaned.txt'
 
-print("Filtering ", input_filename)
-filter_characters(input_filename, output_filename, allowed_characters)
-print("Done. Stored as ", output_filename)
-
+if __name__ == "__main__":
+  main()
